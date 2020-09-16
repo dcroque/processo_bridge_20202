@@ -1,0 +1,121 @@
+  
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <style>
+        body {
+          background-color:black;
+        }
+        h1 {
+          font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+          color: dodgerblue;
+          text-align: center;
+          font-size: 40px;
+          font-family: 'Fira Sans Condensed', sans-serif;
+        }
+        p {
+          font-family: 'Fira Sans Condensed', sans-serif;
+          font-size: 20px;
+          color: dodgerblue;
+        }
+        input[type=number] {
+          font-family: 'Fira Sans Condensed', sans-serif;
+          color: white;
+          font-size: 20px;
+          size: 20px;
+        }
+        .center {
+          margin:auto;
+          width: 50%;
+        }
+        .waves-effect.waves-light{
+          color: white;
+          background-color: dodgerblue;
+          font-family: 'Fira Sans Condensed', sans-serif;
+        }
+      </style>
+      <title>Processo seletivo Bridge 2020.2</title>
+    </head>
+    <body>
+      <h1>Calculador<span style="color:white">a</span> de Fatorial</h1>
+      <div class="row">
+        <form class="col s12">
+          <div class="row">
+            <div class="input-field col s12">
+              <div class = "center">
+                <input id="number-input" onkeydown="return typing(event.key)" min="1" type="number"></input>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="center">
+        <a onclick="updatePage()" class="waves-effect waves-light btn">Calcular!</a>
+        <a onclick ="clean()" class="waves-effect waves-light btn">Limpar</a>
+      </div>
+      <h1 style ="word-wrap: break-word" id="answer"></h1>
+      <p style ="word-wrap: break-word"><span id="input-0"></span><span id="response-0" style="color:white"></span></p>
+      <p style ="word-wrap: break-word"><span id="input-1"></span><span id="response-1" style="color:white"></span></p>
+      <p style ="word-wrap: break-word"><span id="input-2"></span><span id="response-2" style="color:white"></span></p>
+      <p style ="word-wrap: break-word"><span id="input-3"></span><span id="response-3" style="color:white"></span></p>
+      <p style ="word-wrap: break-word"><span id="input-4"></span><span id="response-4" style="color:white"></span></p>
+      <p style ="word-wrap: break-word"><span id="input-5"></span><span id="response-5" style="color:white"></span></p>
+      <p style ="word-wrap: break-word"><span id="input-6"></span><span id="response-6" style="color:white"></span></p>
+      <p style ="word-wrap: break-word"><span id="input-7"></span><span id="response-7" style="color:white"></span></p>
+      <p style ="word-wrap: break-word"><span id="input-8"></span><span id="response-8" style="color:white"></span></p> 
+      <p style ="word-wrap: break-word"><span id="input-9"></span><span id="response-9" style="color:white"></span></p>
+      <script>
+        var data = ["","","","","","","","","","","","","","","","","","","",""];
+
+        function clean(){
+          data = ["","","","","","","","","","","","","","","","","","","",""];
+          updateText();
+        }
+
+        async function updatePage(){
+          var n = document.getElementById("number-input").value;
+          if(n.toString()==""){
+            return;
+          }
+          await calculateAndUpdateData(n);
+          updateText();
+        }
+
+        function updateText(){
+          document.getElementById("answer").innerHTML = data[1];
+          for(i = 9;i>=0;i--){
+            document.getElementById("input-"+i).innerHTML = data[i*2];
+            document.getElementById("response-"+i).innerHTML = data[i*2+1];
+          }
+        }
+
+        async function calculateAndUpdateData(number) {
+          let response = await fetch('/fatorial/'+number);
+          let result = await response.text();
+          var temp = result;
+          for(i = 9;i>=1;i--){
+            data[i*2] = data[(i-1)*2];
+            data[i*2+1] = data[(i-1)*2+1];
+          }
+          data[0] = number.toString()+"!=";
+          data[1] = result;
+        }
+
+        function typing(keyPress){
+          if(['0','1','2','3','4','5','6','7','8','9','Backspace','Delete','ArrowRight','ArrowLeft'].includes(keyPress)){
+            return keyPress;
+          }
+          else{
+            return false;
+          }
+        }
+      </script>
+      
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+      <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@500&display=swap" rel="stylesheet">
+      
+      <script type="text/javascript" src="js/materialize.min.js"></script>
+    </body>
+  </html>
+        

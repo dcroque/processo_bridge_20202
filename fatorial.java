@@ -30,7 +30,7 @@ class Backend {
         @Override
         public void handle(HttpExchange t) throws IOException {
             String response = getRequestArg("/fatorial/",t.getRequestURI().toString());
-            System.out.println("["+getTime()+"] API called for "+response);
+            System.out.println("["+getTime()+"] API requested. Input: "+response);
             int number = Integer.parseInt(response);
             response = fatorial(number).toString();
             t.sendResponseHeaders(200, response.length());
@@ -43,11 +43,19 @@ class Backend {
     static class PageHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange t) throws IOException {
-            String page = "";
             String response = "";
-            System.out.println("["+getTime()+"] Page called");
-            Path pageFile = Path.of("Frontend.html");
-            response = Files.readString(pageFile);
+            String request = t.getRequestURI().toString();
+            Path file;
+            if(request.equals("/")){
+                System.out.println("["+getTime()+"] Page requested");
+                file = Path.of("index.html");
+            }
+            else{
+                System.out.println("["+getTime()+"] Resource "+request+" requested");
+                file = Path.of(request.substring(1));
+            } 
+
+            response = Files.readString(file);
             t.sendResponseHeaders(200, response.length());
             OutputStream os = t.getResponseBody();
             os.write(response.getBytes());
